@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { BsSearch } from "react-icons/bs";
 
-function SideBox({ fetchFunction, weather }) {
+function SideBox({ fetchFunction, weather, error }) {
   const [cityInput, setCityInput] = useState("");
 
   const handleInput = (e) => {
@@ -26,32 +26,37 @@ function SideBox({ fetchFunction, weather }) {
           <BsSearch />
         </button>
       </form>
+      {error && (
+        <p className="text-sm a text-center text-red-500">Try different city</p>
+      )}
       {weather && (
         <div className="mt-12 bg-black/30 p-8 rounded-lg">
-          <h2 className="font-bold text-3xl">Weather details</h2>
-          <div className="mt-4 flex flex-col">
+          <h2 className="font-bold text-3xl border-b-2 pb-3">
+            Weather details
+          </h2>
+          <div className="mt-4 flex flex-col gap-4">
             <div className="flex justify-between">
-              <p>Cloudy</p>
+              <p className="opacity-80">Cloudy</p>
               <p>{`${weather.clouds.all} %`}</p>
             </div>
             <div className="flex justify-between">
-              <p>Humidity </p>
+              <p className="opacity-80">Humidity </p>
               <p>{`${weather.main.humidity} %`}</p>
             </div>
             <div className="flex justify-between">
-              <p>Wind</p>
+              <p className="opacity-80">Wind</p>
               <p>{`${weather.wind.speed}m/s`}</p>
             </div>
             <div className="flex justify-between">
-              <p>Pressure</p>
+              <p className="opacity-80">Pressure</p>
               <p>{`${weather.main.pressure}hpa`}</p>
             </div>
             <div className="flex justify-between">
-              <p>Max Temperature</p>
+              <p className="opacity-80">Max Temperature</p>
               <p>{`${weather.main.temp_max}°C`}</p>
             </div>
             <div className="flex justify-between">
-              <p>Min Temperature</p>
+              <p className="opacity-80">Min Temperature</p>
               <p>{`${weather.main.temp_min}°C`}</p>
             </div>
           </div>

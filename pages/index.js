@@ -8,6 +8,7 @@ import Image from "next/image";
 export default function Home() {
   const [weather, setWeather] = useState(undefined);
   const [loading, setLoading] = useState(false);
+  const [cityError, setCityError] = useState(false);
   const [bgImage, setBgImage] = useState(
     "https://images.unsplash.com/photo-1493314894560-5c412a56c17c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
   );
@@ -28,14 +29,23 @@ export default function Home() {
   const getWeather = (input) => {
     let url = `https://api.openweathermap.org/data/2.5/weather?q=${input}&units=metric&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}`;
     setLoading(true);
-    axios.get(url).then((res) => {
-      setWeather(res.data);
-    });
+    axios
+      .get(url)
+      .then((res) => {
+        setCityError(false);
+        setWeather(res.data);
+      })
+      .catch((error) => {
+        if (error.request) {
+          setCityError(true);
+        } else {
+          console.log("Error", error.message);
+        }
+      });
     setLoading(false);
   };
 
   useEffect(() => {
-    console.log(weather);
     if (weather) {
       Object.entries(chooseImage).forEach(([key, value]) => {
         if (key === weather.weather[0].main) {
@@ -61,9 +71,13 @@ export default function Home() {
         alt="background image"
         src={bgImage}
       ></Image>
-      <div className="flex flex-col-reverse md:flex-row relative z-10 text-white h-screen">
+      <div className="flex flex-col-reverse md:flex-row relative z-10 text-white h-screen cursor-default">
         <MainSection weather={weather}></MainSection>
-        <SideBox weather={weather} fetchFunction={getWeather}></SideBox>
+        <SideBox
+          weather={weather}
+          error={cityError}
+          fetchFunction={getWeather}
+        ></SideBox>
       </div>
     </>
   );
